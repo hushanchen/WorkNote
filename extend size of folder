@@ -1,0 +1,24 @@
+extend size of folder
+
+1. df -h
+/dev/mapper/vg00-lvol05   20G   13G  8.0G  61% /DB_bkup
+
+2. lvextend -L +20G /dev/mapper/vg00-lvol05
+  Extending logical volume lvol05 to 40.00 GiB
+  Logical volume lvol05 successfully resized
+
+3. resize_reiserfs /dev/mapper/vg00-lvol05
+
+mount
+/dev/mapper/vg00-lvol05 on /DB_bkup type reiserfs (rw,acl,user_xattr)
+
+tip:
+use command mount to check the device type xfs or reiserfs. otherwise met the errors below:
+---
+xfs_growfs /dev/mapper/vg00-lvol05
+xfs_growfs: /dev/mapper/vg00-lvol05 is not a mounted XFS filesystem
+
+resize2fs -f /dev/mapper/vg00-lvol05
+resize2fs 1.41.9 (22-Aug-2009)
+resize2fs: Bad magic number in super-block while trying to open /dev/mapper/vg00                                                                                          -lvol05
+Couldn't find valid filesystem superblock.
